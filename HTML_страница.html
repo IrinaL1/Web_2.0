@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+
+<style>
+    li.exsansserif { font-family: Arial, Helvetica, sans-serif; font-size: 18px;}
+    .Remember {h2 {color: rgb(58, 155, 16)}}
+    .Enum_1 {color: rgb(39, 201, 39)}
+    .Forget{
+            h2 {color: rgb(159, 13, 13)};
+            position: absolute;
+			top: 110px;
+            left: 470px
+    }
+    .Enum_2 {color: rgb(218, 13, 13)}
+    .Want{
+            h2 {color: rgb(230, 123, 0)}
+            position: absolute;
+            top: 200px;
+            left: 800px
+    }
+    .Enum_3 {color: orange}
+    #image {
+        display: none
+    }
+</style>
+
+</head>
+
+<body>
+
+    <section class="Remember">
+        <h2>Что я помню</h2>
+        <ul class="Enum_1">
+            <li class="exsansserif">Как создавать подобные html-страницы</li>
+            <li class="exsansserif">Немного о функциях</li>
+            <li class="exsansserif">Немного о том, как создавать классы и объекты</li>
+        </ul>
+    </section>
+
+    <section class="Forget">
+        <h2>Что я не помню</h2>
+        <ul class="Enum_2">
+            <li>Видимость переменных в JS</li>
+            <li>Видимо, много еще чего</li>
+        </ul>
+    </section>
+
+    <section class="Want">
+        <h2>Что я хочу</h2>
+        <ul class="Enum_3">
+            <li>Понять, как связывать фронт-часть с бэк-частью</li>
+        </ul>
+    </section>
+
+    <button type="submit" id="button1">черный</button>
+    <button type="submit" id="button2">белый</button>
+    <button type="submit" id="button3">покажи картинку</button>
+
+    <img id="image" src="https://medialeaks.ru/wp-content/uploads/2020/11/maxresdefault-1.jpg" alt="танцующая корова" width="205px" height="135px"/>
+
+    <script>
+        const button1 = document.getElementById("button1")
+        function button1_click(){
+            document.body.style.background = 'black';
+        }
+        button1.addEventListener('click', button1_click)
+
+        const button2 = document.getElementById("button2")
+        function button2_click(){
+            document.body.style.background = 'white';
+        }
+        button2.addEventListener('click', button2_click)
+
+        const button3 = document.getElementById("button3")
+        function button3_click(){
+            document.getElementById('image').style.display = "block";
+        }
+        button3.addEventListener('click', button3_click)
+
+    </script>
+</body>
