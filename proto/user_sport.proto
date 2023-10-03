@@ -1,0 +1,35 @@
+syntax="proto3";
+
+//Структура классов и методы
+//Серверные функции
+service SportLive{
+    rpc GetSport(UserName) returns (Sports);
+    rpc AllSports(MaxRequest) returns (AllSport);  
+}
+
+//Переменные на вход и ответ
+message UserName{
+    string name = 1;
+}
+
+message Sports{
+    
+    string user = 1;  
+    message Trener{
+        string fio = 1;
+    }
+
+    Trener tr = 2;
+    string sp = 3;
+    map<string, Trener> st = 4;
+}
+
+message MaxRequest{
+    int32 c = 1;
+}
+
+message AllSport{
+    repeated Sports spt = 1;
+}
+
+//python -m grpc_tools.protoc -I./"путь до папки протос, где лежит этот файл"  --python_out=. --pyi_out=. --grpc_python_out=. ./"путь до самого файла"
