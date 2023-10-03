@@ -1,0 +1,41 @@
+syntax="proto3";
+
+//Файл который описывает структруру классов, которые потом можно будет встраивать в сам код программы
+//Также он описывает и часть их методов(конструкторы и тд)
+
+service SportLive{
+    //Здесь описываешь какие функции у тебя должны быть на сервере)
+    rpc GetSport(UserName) returns (Sports);
+    rpc AllSports(MaxRequest) returns (AllSport);  
+}
+
+//Здесь идёт описание переменных которые передаются аргументами в функции выше и которые возвращаются
+message UserName{
+    string name = 1;
+}
+
+message Sports{
+    
+    string user = 1; 
+   //Это вложеность 
+    message Trener{
+        string fio = 1;
+    }
+
+    Trener tr = 2;
+    string sp = 3;
+    //Это мар
+    map<string, Trener> st = 4;
+}
+
+message MaxRequest{
+    int32 c = 1;
+}
+
+message AllSport{
+    //Это репитед, он же повтор действия
+    repeated Sports spt = 1;
+}
+
+//После создания в командной строке пишешь следующую команду и у тебя появляются файлы с _pb2 на конце
+//python -m grpc_tools.protoc -I./"путь до папки протос, где лежит этот файл"  --python_out=. --pyi_out=. --grpc_python_out=. ./"путь до самого файла"
