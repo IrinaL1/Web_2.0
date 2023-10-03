@@ -4,10 +4,10 @@ from user_sport_pb2 import Sports, AllSport
 from sport_info import s
 from concurrent import futures
 
-#Это сервер, в нём создаём класс, который наследуется от класса, созданого в прото(service который)
+#создаём класс, который наследуется от класса, созданого в прото
 
 class SportLiveServicer(users_grpc.SportLiveServicer):
-    #Дальше идёт описание функций
+    #описание функций
     def GetSport(self, request, context):
         #Ищем человека с нужным именем, запрошеным клиентом
         for i in s:
@@ -22,7 +22,7 @@ class SportLiveServicer(users_grpc.SportLiveServicer):
         res = [Sports(user=i['user'],tr=i['tr'], sp=i['sp'], st=i['st']) for i in s]
         return AllSport(spt=res[:request.c])
 
-#Часть которая говорит серверу какой порт слушать и каким классом пользоваться при приходе запроса 
+#Сервер: какой порт слушать и каким классом пользоваться при приходе запроса 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     users_grpc.add_SportLiveServicer_to_server(SportLiveServicer(), server)
