@@ -1,0 +1,6 @@
+syntax="proto3";
+
+message Weather{
+    int32 deg = 1;
+    string defin = 2;
+}
