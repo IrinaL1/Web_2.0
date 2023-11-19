@@ -1,60 +1,37 @@
-const express = require('express');
-const webpush = require('web-push');
-const bodyParser = require('body-parser');
-const path = require('path');
-const redis = require('redis')
-
+const express = require("express");
 const app = express();
-const cl = redis.createClient({
-    host: '127.0.0.1', 
-    port: 6379
-  });
+const { v4: uuidv4 } = require("uuid");
+const server = require('http').Server(app);
 
-const { expressCspHeader, INLINE, NONE, SELF } = require('express-csp-header');
-app.use(bodyParser.json());
+app.set('view engine', 'ejs')
 
-app.use(express.static(path.join(__dirname, "client")))
+const io = require("socket.io")(server);
+const { ExpressPeerServer } = require("peer");
+const peerServer = ExpressPeerServer(server, {
+    debug: true,
+});
 
-//Борьба с блокировкой от Content Security Policy
-app.use(expressCspHeader({ 
-    policies: { 
-        'default-src': [expressCspHeader.NONE], 
-        'img-src': [expressCspHeader.SELF], 
-    } 
-})); 
+app.use("/peerjs", peerServer);
+app.use(express.static('public')); 
 
-/*//Ключи сгенерированы в терминале
-const publicVapidKey = "BAZIsviuWM2A77LwvLgAfx897VZpSVhby0JpN3Oo4gEa8NcJzexKwO24NaymVPAKGdBAmZMh9SfODjd4NKObJcc";
-const privateVapidKey = "koSsLVi4QOZboVaQM03BJ3S5dQLLI1YrCYVYXdhHo98";
+app.get("/", (req, res) => {
+    res.redirect(`/${uuidv4()}`);
+});
 
-webpush.setVapidDetails("mailto:email@mail.com", publicVapidKey, privateVapidKey);
-*/
+app.get("/:room", (req, res) => {
+    //const roomId = req.params.room;
+    //console.log(roomId);
+    //res.render('room', {roomId});
+    res.render('room', { roomId: req.params.room });
+});
 
-const vapidKeys = webpush.generateVAPIDKeys();
-
-cl.set('publicVAPIDKeys', vapidKeys.publicKey);
-cl.set('privateVAPIDKeys', vapidKeys.privateKey);
-
-app.get('/getPublicKey', (req, res) => {
-    cl.get('publicVAPIDKeys', (err, publicVAPIDKey) => {
-      if (err) {
-        console.error('Ошибка при получении публичного ключа из Redis:', err);
-        res.status(500).json({ error: 'Ошибка сервера' });
-      } else {
-        res.json({ publicKey: publicVAPIDKey });
-      }
+io.on("connection", (socket) => {
+    socket.on("join-room", (roomId, userId) => {
+    socket.join(roomId);
+    socket.on('ready', ()=> {
+    socket.to(roomId).broadcast.emit("user-connected", userId);
     });
-  });
+    });
+});
 
-app.post('/subscribe', (req, res) => {
-    const subscription = req.body;
-    res.status(201).json({});
-    const payload = JSON.stringify({ title: "Привет", body: "This is your first push notification" });
-    webpush.sendNotification(subscription, payload).catch(console.log);
-})
-
-const PORT = 5050;
-
-app.listen(PORT, () => {
-    console.log("Сервер слушает порт " + PORT);
-})
+server.listen(3030);
