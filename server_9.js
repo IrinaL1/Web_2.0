@@ -18,10 +18,6 @@ app.get("/", (req, res) => {
     res.redirect(`/${uuidv4()}`);
 });
 
-app.get("/heartbeat", (req, res) => {
-    res.json({ beat: "heartbeat ok" });
-});
-
 app.get("/:room", (req, res) => {
     //const roomId = req.params.room;
     //console.log(roomId);
