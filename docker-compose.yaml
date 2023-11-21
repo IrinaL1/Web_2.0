@@ -1,0 +1,24 @@
+version: "2"
+
+
+services:
+#Build my container with Dockerfile
+  server:
+    build: .
+    ports:
+      - "3030:3030"
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3030/heartbeat"]
+      interval: 2m
+      timeout: 10s
+      retries: 5
+#Подключаем redis, просто чтобы протестировать compose и heartbeat
+  redis:
+    image: redis:latest
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 2m
+      timeout: 10s
+      retries: 5
